@@ -1,0 +1,148 @@
+.App {
+  text-align: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.App-header {
+  background-color: #282c34;
+  padding: 20px;
+  color: white;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.search-section {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.search-form {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.search-form input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 300px;
+}
+
+.search-form button {
+  padding: 10px 15px;
+  background-color: #61dafb;
+  border: none;
+  border-radius: 4px;
+  color: #282c34;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.search-form button:hover {
+  background-color: #4fa8c5;
+}
+
+.tabs {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+  gap: 10px;
+}
+
+.tabs button {
+  padding: 10px 20px;
+  background-color: #f1f1f1;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.tabs button.active {
+  background-color: #61dafb;
+  color: #282c34;
+  font-weight: bold;
+}
+
+.tabs button:hover:not(.active) {
+  background-color: #ddd;
+}
+
+.tabs button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.main-content {
+  text-align: left;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+}
+
+.profile-section, .projects-section, .skills-section, .search-results {
+  padding: 15px;
+}
+
+.education-list, .work-list, .projects-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.education-item, .work-item, .project-item {
+  background-color: white;
+  padding: 15px;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.skills-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 15px 0;
+}
+
+.skill-tag {
+  background-color: #61dafb;
+  color: #282c34;
+  padding: 5px 10px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.skill-tag:hover {
+  background-color: #4fa8c5;
+}
+
+.links, .project-links {
+  display: flex;
+  gap: 15px;
+  margin-top: 10px;
+}
+
+.links a, .project-links a {
+  color: #61dafb;
+  text-decoration: none;
+}
+
+.links a:hover, .project-links a:hover {
+  text-decoration: underline;
+}
+
+.result-section {
+  margin-bottom: 30px;
+}
+
+.result-section h3 {
+  border-bottom: 2px solid #61dafb;
+  padding-bottom: 5px;
+  margin-bottom: 15px;
+}
