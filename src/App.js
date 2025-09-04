@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './App.css';
@@ -12,6 +11,8 @@ function App() {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState(null);
   const [activeTab, setActiveTab] = useState('profile');
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     fetchProfile();
@@ -19,20 +20,27 @@ function App() {
 
   const fetchProfile = async () => {
     try {
+      setLoading(true);
+      setError(null);
       const response = await axios.get(`${API_BASE_URL}/api/profile`);
       setProfile(response.data);
     } catch (error) {
       console.error('Error fetching profile:', error);
+      setError('Failed to load profile. Please check if the backend server is running.');
+    } finally {
+      setLoading(false);
     }
   };
 
   const fetchProjectsBySkill = async (skill) => {
     try {
+      setError(null);
       const response = await axios.get(`${API_BASE_URL}/api/profile/projects?skill=${skill}`);
       setProjects(response.data);
       setActiveTab('projects');
     } catch (error) {
       console.error('Error fetching projects:', error);
+      setError('Failed to fetch projects');
     }
   };
 
@@ -47,17 +55,36 @@ function App() {
     e.preventDefault();
     if (searchQuery.trim()) {
       try {
+        setError(null);
         const response = await axios.get(`${API_BASE_URL}/api/profile/search?q=${searchQuery}`);
         setSearchResults(response.data);
         setActiveTab('search');
       } catch (error) {
         console.error('Error searching:', error);
+        setError('Failed to perform search');
       }
     }
   };
 
-  if (!profile) {
+  if (loading) {
     return <div className="App">Loading...</div>;
+  }
+
+  if (error) {
+    return (
+      <div className="App">
+        <div className="error-message" style={{color: 'red', padding: '20px'}}>
+          {error}
+          <button onClick={fetchProfile} style={{marginLeft: '10px'}}>
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (!profile) {
+    return <div className="App">No profile data available.</div>;
   }
 
   return (
@@ -97,13 +124,13 @@ function App() {
           className={activeTab === 'projects' ? 'active' : ''} 
           onClick={() => setActiveTab('projects')}
         >
-          Projects ({profile.projects.length})
+          Projects ({profile.projects?.length || 0})
         </button>
         <button 
           className={activeTab === 'skills' ? 'active' : ''} 
           onClick={() => setActiveTab('skills')}
         >
-          Skills ({profile.skills.length})
+          Skills ({profile.skills?.length || 0})
         </button>
         <button 
           className={activeTab === 'search' ? 'active' : ''} 
@@ -122,33 +149,33 @@ function App() {
             
             <h3>Education</h3>
             <div className="education-list">
-              {profile.education.map((edu, index) => (
+              {profile.education?.map((edu, index) => (
                 <div key={index} className="education-item">
                   <h4>{edu.institution}</h4>
                   <p>{edu.degree} {edu.fieldOfStudy && `in ${edu.fieldOfStudy}`}</p>
                   <p>{edu.startDate && new Date(edu.startDate).getFullYear()} - {edu.endDate ? new Date(edu.endDate).getFullYear() : 'Present'}</p>
                   {edu.description && <p>{edu.description}</p>}
                 </div>
-              ))}
+              )) || <p>No education information available</p>}
             </div>
 
             <h3>Work Experience</h3>
             <div className="work-list">
-              {profile.work.map((job, index) => (
+              {profile.work?.map((job, index) => (
                 <div key={index} className="work-item">
                   <h4>{job.company}</h4>
                   <p>{job.position}</p>
                   <p>{job.startDate && new Date(job.startDate).getFullYear()} - {job.endDate ? new Date(job.endDate).getFullYear() : 'Present'}</p>
                   {job.description && <p>{job.description}</p>}
                 </div>
-              ))}
+              )) || <p>No work experience available</p>}
             </div>
 
             <h3>Links</h3>
             <div className="links">
-              {profile.links.github && <a href={profile.links.github} target="_blank" rel="noopener noreferrer">GitHub</a>}
-              {profile.links.linkedin && <a href={profile.links.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn</a>}
-              {profile.links.portfolio && <a href={profile.links.portfolio} target="_blank" rel="noopener noreferrer">Portfolio</a>}
+              {profile.links?.github && <a href={profile.links.github} target="_blank" rel="noopener noreferrer">GitHub</a>}
+              {profile.links?.linkedin && <a href={profile.links.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn</a>}
+              {profile.links?.portfolio && <a href={profile.links.portfolio} target="_blank" rel="noopener noreferrer">Portfolio</a>}
             </div>
           </div>
         )}
@@ -165,7 +192,7 @@ function App() {
                     <h3>{project.title}</h3>
                     <p>{project.description}</p>
                     <div className="skills">
-                      {project.skills.map((skill, i) => (
+                      {project.skills?.map((skill, i) => (
                         <span 
                           key={i} 
                           className="skill-tag"
@@ -179,8 +206,8 @@ function App() {
                       ))}
                     </div>
                     <div className="project-links">
-                      {project.links.github && <a href={project.links.github} target="_blank" rel="noopener noreferrer">GitHub</a>}
-                      {project.links.demo && <a href={project.links.demo} target="_blank" rel="noopener noreferrer">Live Demo</a>}
+                      {project.links?.github && <a href={project.links.github} target="_blank" rel="noopener noreferrer">GitHub</a>}
+                      {project.links?.demo && <a href={project.links.demo} target="_blank" rel="noopener noreferrer">Live Demo</a>}
                     </div>
                   </div>
                 ))}
@@ -193,7 +220,7 @@ function App() {
           <div className="skills-section">
             <h2>Skills</h2>
             <div className="skills-list">
-              {profile.skills.map((skill, index) => (
+              {profile.skills?.map((skill, index) => (
                 <span 
                   key={index} 
                   className="skill-tag"
@@ -204,7 +231,7 @@ function App() {
                 >
                   {skill}
                 </span>
-              ))}
+              )) || <p>No skills listed</p>}
             </div>
           </div>
         )}
@@ -213,7 +240,7 @@ function App() {
           <div className="search-results">
             <h2>Search Results for "{searchQuery}"</h2>
             
-            {searchResults.skills.length > 0 && (
+            {searchResults.skills?.length > 0 && (
               <div className="result-section">
                 <h3>Skills ({searchResults.skills.length})</h3>
                 <div className="skills-list">
@@ -233,7 +260,7 @@ function App() {
               </div>
             )}
             
-            {searchResults.projects.length > 0 && (
+            {searchResults.projects?.length > 0 && (
               <div className="result-section">
                 <h3>Projects ({searchResults.projects.length})</h3>
                 <div className="projects-list">
@@ -242,7 +269,7 @@ function App() {
                       <h4>{project.title}</h4>
                       <p>{project.description}</p>
                       <div className="skills">
-                        {project.skills.map((skill, i) => (
+                        {project.skills?.map((skill, i) => (
                           <span 
                             key={i} 
                             className="skill-tag"
@@ -261,7 +288,7 @@ function App() {
               </div>
             )}
             
-            {searchResults.education.length > 0 && (
+            {searchResults.education?.length > 0 && (
               <div className="result-section">
                 <h3>Education ({searchResults.education.length})</h3>
                 <div className="education-list">
@@ -275,7 +302,7 @@ function App() {
               </div>
             )}
             
-            {searchResults.work.length > 0 && (
+            {searchResults.work?.length > 0 && (
               <div className="result-section">
                 <h3>Work Experience ({searchResults.work.length})</h3>
                 <div className="work-list">
@@ -289,7 +316,7 @@ function App() {
               </div>
             )}
             
-            {Object.values(searchResults).every(arr => arr.length === 0) && (
+            {Object.values(searchResults).every(arr => arr?.length === 0) && (
               <p>No results found for "{searchQuery}"</p>
             )}
           </div>
