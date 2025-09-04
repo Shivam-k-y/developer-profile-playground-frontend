@@ -1,70 +1,166 @@
-# Getting Started with Create React App
+# Developer Profile Playgroun
+A full-stack application to showcase and manage developer profiles with search capabilities.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Additional Resources
 
-## Available Scripts
+- **Resume**: https://drive.google.com/file/d/1FEvzoR5LRvsmRoeaKAozdo-UfyFXLo0d/view?usp=sharing
+- **Postman Collection**: https://api.postman.com/collections/38947318-677533d6-8b05-405f-880f-97da08ecd17a?access_key=PMAT-01K4AZZN9TPH8HX3FDSY023XNN
 
-In the project directory, you can run:
+## Local SetupA full-stack application to showcase and manage developer profiles with search capabilities.
 
-### `npm start`
+## Architecture
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- **Frontend**: React.js with functional components and hooks
+- **Backend**: Node.js with Express.js
+- **Database**: MongoDB with Mongoose ODM
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Deployment
 
-### `npm test`
+- **Frontend**: Vercel
+- **Backend**: Vercel
+- **Database**: MongoDB Atlas
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Features
 
-### `npm run build`
+- CRUD operations for developer profiles
+- Search projects by skills
+- Global search across all profile data
+- Skills listing with click-to-filter functionality
+- Responsive UI
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Live Demo
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- **Frontend**: https://developer-profile-playground-fronte.vercel.app/
+- **Health Check**: https://developer-profile-playground-backen.vercel.app/health
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Repository
 
-### `npm run eject`
+https://github.com/Shivam-k-y/developer-profile-playground-backend
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## Local Setup
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Prerequisites
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+- Node.js (v14 or higher)
+- MongoDB (local or Atlas)
+- Git
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### Backend Setup
 
-## Learn More
+1. Clone the repository
+2. Install dependencies: `npm install`
+3. Create `.env` file:
+   ```
+   MONGODB_URI=mongodb://localhost:27017/developerProfile
+   PORT=5000
+   FRONTEND_URL=http://localhost:3000
+   ```
+4 Seed the database: `npm run seed`
+5. Start the server: `npm run dev`
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### Frontend Setup
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+1. Install dependencies: `npm install`
+2. Create `.env` file:
+   ```
+   REACT_APP_API_URL=http://localhost:5000
+   ```
+3. Start the application: `npm start`
 
-### Code Splitting
+## Production Deployment
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### Backend (Vercel)
 
-### Analyzing the Bundle Size
+1. Connect your GitHub repo to Vercel
+2. Set environment variables in Vercel dashboard:
+   - `MONGODB_URI`
+   - `PORT`
+   - `FRONTEND_URL`
+3. Deploy automatically on push to main
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+### Frontend (Vercel)
 
-### Making a Progressive Web App
+1. Build the app: `npm run build`
+2. Deploy to Vercel or connect GitHub
+3. Set environment variable: `REACT_APP_API_URL` to your deployed backend URL
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+### Database (MongoDB Atlas)
 
-### Advanced Configuration
+1. Create a free cluster on MongoDB Atlas
+2. Get connection string
+3. Update `MONGODB_URI` in your production environment
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+## Database Schema
 
-### Deployment
+The application uses a single Profile collection with the following structure:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+```javascript
+{
+  name: String,
+  email: String,
+  education: [{
+    institution: String,
+    degree: String,
+    fieldOfStudy: String,
+    startDate: Date,
+    endDate: Date,
+    description: String
+  }],
+  skills: [String],
+  projects: [{
+    title: String,
+    description: String,
+    skills: [String],
+    links: {
+      github: String,
+      demo: String,
+      other: String
+    }
+  }],
+  work: [{
+    company: String,
+    position: String,
+    startDate: Date,
+    endDate: Date,
+    description: String
+  }],
+  links: {
+    github: String,
+    linkedin: String,
+    portfolio: String,
+    other: String
+  },
+  createdAt: Date,
+  updatedAt: Date
+}
+```
 
-### `npm run build` fails to minify
+## API Documentation
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### Endpoints
+
+- `GET /api/profile` - Get profile data
+- `POST /api/profile` - Create/update profile
+- `GET /api/profile/projects?skill=python` - Get projects by skill
+- `GET /api/profile/skills/top` - Get all skills
+- `GET /api/profile/search?q=react` - Search across all content
+- `GET /health` - Health check
+
+## Future Enhancements
+
+- Add authentication for write operations
+- Improve input validation and error handling
+- Support for multiple profiles
+- Add API rate limiting
+- Create admin dashboard for profile management
+
+## Current Profile Data
+
+This backend is seeded with sample data for **SHIVAM KUMAR**, including:
+
+- Education from IIIT Kottayam
+- 11 technical skills
+- 5 projects including Todos App, SIP Calculator, Currency Converter, Anonymous Chat App, and Food App
+- Work experience (dummy data)
+- Social links (GitHub, LinkedIn, Portfolio)
+
