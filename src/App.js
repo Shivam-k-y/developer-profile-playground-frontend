@@ -13,6 +13,7 @@ function App() {
   const [activeTab, setActiveTab] = useState('profile');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isProjectsFiltered, setIsProjectsFiltered] = useState(false);
 
   useEffect(() => {
     fetchProfile();
@@ -24,6 +25,9 @@ function App() {
       setError(null);
       const response = await axios.get(`${API_BASE_URL}/api/profile`);
       setProfile(response.data);
+      // Set all projects by default
+      setProjects(response.data.projects || []);
+      setIsProjectsFiltered(false);
     } catch (error) {
       console.error('Error fetching profile:', error);
       setError('Failed to load profile. Please check if the backend server is running.');
@@ -37,10 +41,19 @@ function App() {
       setError(null);
       const response = await axios.get(`${API_BASE_URL}/api/profile/projects?skill=${skill}`);
       setProjects(response.data);
+      setIsProjectsFiltered(true);
       setActiveTab('projects');
     } catch (error) {
       console.error('Error fetching projects:', error);
       setError('Failed to fetch projects');
+    }
+  };
+
+  const showAllProjects = () => {
+    if (profile && profile.projects) {
+      setProjects(profile.projects);
+      setIsProjectsFiltered(false);
+      setSearchSkill('');
     }
   };
 
@@ -182,9 +195,34 @@ function App() {
 
         {activeTab === 'projects' && (
           <div className="projects-section">
-            <h2>Projects</h2>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+              <h2>Projects</h2>
+              {isProjectsFiltered && (
+                <button 
+                  onClick={showAllProjects}
+                  style={{
+                    padding: '8px 16px',
+                    backgroundColor: '#61dafb',
+                    border: 'none',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                    color: '#282c34',
+                    fontWeight: 'bold'
+                  }}
+                >
+                  Show All Projects
+                </button>
+              )}
+            </div>
+            
+            {isProjectsFiltered && (
+              <p style={{ marginBottom: '15px', fontStyle: 'italic', color: '#666' }}>
+                Showing projects filtered by: "{searchSkill}"
+              </p>
+            )}
+            
             {projects.length === 0 ? (
-              <p>No projects found. Try a different skill.</p>
+              <p>No projects found. {isProjectsFiltered ? 'Try a different skill or view all projects.' : ''}</p>
             ) : (
               <div className="projects-list">
                 {projects.map((project, index) => (
